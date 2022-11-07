@@ -38,6 +38,19 @@ export class CollectorService {
         }
     }
 
+    async crear(collectorDTO: CollectorDTO): Promise<CollectorDTO> {
+        const { error } = validate(this.schema, collectorDTO);
+        if(error)
+            throw new BusinessLogicException(error.toString(), BusinessError.BAD_REQUEST)
+        else {
+            const collector = new Collector();
+            collector.name = collectorDTO.name;
+            collector.telephone = collectorDTO.telephone;
+            collector.email = collectorDTO.email;
+            return await this.collectorRepository.save(collector);
+        }
+    }
+
     async update(id: number, collectorDTO: CollectorDTO) {
 
         const collector = await this.collectorRepository.findOne(id);
